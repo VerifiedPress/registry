@@ -1,0 +1,23 @@
+{
+  "@context": "https://www.w3.org/ns/credentials/v2",
+  "id": "did:press:verifiedpress.org:issuer",
+  "type": "Issuer",
+  "issuerName": "VerifiedPress Credential Authority by PRESSPAGE ENTERTAINMENT INC",
+  "signedIssuerCredential": "https://verifiedpress.org/credentials/issuer-profile.json",
+  "verificationMethod": [
+    {
+      "id": "did:press:verifiedpress.org:issuer",
+      "type": "RSAVerificationKey2019",
+      "jwk": {
+          "kty": "RSA",
+          "use": "sig",
+          "alg": "RS256",
+          "kid": "did:press:verifiedpress.org:issuer",
+          "n": "o3FubhKvRnM3kjvu9S-ydaauLo-SBL7qwMOojNPETvR8KF2f4Rf5Ky4P5UVKwGSaY-HWS8puQKhXVzrtoqXBYHG34WjfXpSWClcbA2aurhwALjKao0sQaLTxWJ2zukM_GClclobcE-C9QfPZPETPO1hfZlJyYOlb8lY19bhUALOrLTpUlGrOKyPKCFGi0-fZhnKJ6tca7Ei5S4NL-48ao5CiI5BAosKRv3KVpOkrJhcaWS77rArgOSyZmRnGKMklcNvmSvPGKd-HWdbOU3JnlArSWt5A5Rr6hpbJ01SgugaTLtCem8QJPDbcq8Do2b0G9kC6G8AX09pE8A6s2v3HPQ",
+          "e": "AQAB"
+      }
+    }
+  ],
+  "assertionMethod": "https://verifiedpress.org/keys/public-issuer.pem",
+  "proofPurpose": "assertionMethod"
+}

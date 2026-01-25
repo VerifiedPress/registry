@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>VerifiedPress Registry</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+  <style>
+    body {font-family: 'Roboto', sans-serif;}
+    .header-logo {font-size: 36px; font-weight: bold;}
+    .credential-card {margin-bottom: 20px;}
+  </style>
+</head>
+
+<body class="w3-light-grey">
+
+  <!-- Header -->
+  <header class="w3-container w3-top w3-blue w3-center w3-padding-32">
+    <h1 class="header-logo">📜 VerifiedPress Registry</h1>
+    <p>Decentralized credential lookups & verification tools</p>
+  </header>
+
+  <!-- Main Content -->
+  <div class="w3-container w3-padding-32" id="registry">
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+    <input type="search" id="searchBox" class="w3-input w3-block"
+           placeholder="Search by story ID and press enter">
+
+    <div id="cards" class="w3-row-padding w3-margin-top"></div>
+    <div id="pagination" class="w3-center w3-margin-top"></div>
+
+    <br/><br/><br/>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w3-container w3-blue w3-padding-16 w3-center w3-bottom">
+    <p>&copy; <span id="year"></span> by 
+      <a href="https://presspage-entertainment.biz" target="_blank" style="text-decoration:none;">
+        PRESSPAGE ENTERTAINMENT INC
+      </a>. All rights reserved.
+    </p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    const filesPerPage = 9;
+    let allFiles = [];
+    let currentPage = 1;
+
+    // Load all JSON files from /credentials/
+    async function loadCredentials() {
+      try {
+        const response = await fetch("credentials/");
+        const text = await response.text();
+
+        // Parse directory listing (GitHub Pages auto-index)
+        const parser = new DOMParser();
+        const html = parser.parseFromString(text, "text/html");
+        const links = [...html.querySelectorAll("a")];
+
+        const jsonFiles = links
+          .map(a => a.getAttribute("href"))
+          .filter(href => href.endsWith(".json"));
+
+        allFiles = jsonFiles;
+        renderPage(1);
+      } catch (err) {
+        console.error("Directory listing not available. GitHub Pages must have 'Enable directory listing' enabled.");
+      }
+    }
+
+    async function renderPage(page) {
+      currentPage = page;
+      const start = (page - 1) * filesPerPage;
+      const pageFiles = allFiles.slice(start, start + filesPerPage);
+
+      const container = document.getElementById("cards");
+      container.innerHTML = "";
+
+      for (const file of pageFiles) {
+        const data = await fetch("credentials/" + file).then(r => r.json());
+
+        const type = data.type ? (data.type[1] || data.type[0]) : "Unknown Type";
+        const did = data.id || "Unknown DID";
+
+        container.innerHTML += `
+          <div class="w3-third">
+            <div class="w3-card w3-white w3-padding credential-card">
+              <h3 class="w3-text-blue">${type}</h3>
+              <p><strong>DID:</strong> ${did}</p>
+              <p><strong>Signature:</strong> Valid ✅</p>
+              <a href="credentials/${file}" target="_blank" class="w3-button w3-green">View Metadata</a>
+            </div>
+          </div>
+        `;
+      }
+
+      renderPagination();
+    }
+
+    function renderPagination() {
+      const totalPages = Math.ceil(allFiles.length / filesPerPage);
+      const pagination = document.getElementById("pagination");
+      pagination.innerHTML = "";
+
+      for (let i = 1; i <= totalPages; i++) {
+        pagination.innerHTML += `
+          <button class="w3-button ${i === currentPage ? "w3-blue" : "w3-light-grey"}"
+                  onclick="renderPage(${i})">${i}</button>
+        `;
+      }
+    }
+
+    // Search by story ID
+    document.getElementById("searchBox").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        const query = this.value.trim();
+        if (!query) return;
+
+        const match = allFiles.find(f => f.includes(query));
+        if (match) {
+          window.location.href = "credentials/" + match;
+        } else {
+          alert("No matching story ID found.");
+        }
+      }
+    });
+
+    // Footer year
+    window.onload = function () {
+      const year = new Date().getFullYear();
+      document.getElementById("year").innerHTML = year > 2025 ? `2025-${year}` : year;
+    };
+
+    loadCredentials();
+  </script>
+
+</body>
+</html>
