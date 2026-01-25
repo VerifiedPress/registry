@@ -52,7 +52,7 @@
     // Load all JSON files from /credentials/
     async function loadCredentials() {
       try {
-        const response = await fetch("credentials/");
+        const response = await fetch("https://registry.verifiedpress.org/credentials/");
         const text = await response.text();
 
         // Parse directory listing (GitHub Pages auto-index)
