@@ -100,6 +100,7 @@
         console.log(data);
         const type = data.type ? (data.type[1] || data.type[0]) : "Unknown Type";
         const did = data.id || "Unknown DID";
+        const story_file = file.replace("urn-uuid-","");
 
         container.innerHTML += `
           <div class="w3-third">
@@ -108,6 +109,7 @@
               <p><strong>DID:</strong> ${did}</p>
               <p><strong>Signature:</strong> Valid ✅</p>
               <a href="credentials/${file}" target="_blank" class="w3-button w3-green">View Metadata</a>
+              <a href="content/${story_file}" target="_blank" class="w3-button w3-blue">View Content</a>
             </div>
           </div>
         `;
