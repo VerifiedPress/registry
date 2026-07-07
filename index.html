@@ -98,7 +98,6 @@
 
       for (const file of pageFiles) {
         const data = await fetch("credentials/" + file).then(r => r.json());
-        console.log(data);
         const type = data.type ? (data.type[1] || data.type[0]) : "Unknown Type";
         const did = data.id || "Unknown DID";
         const story_file = file.replace("urn-uuid-","");
